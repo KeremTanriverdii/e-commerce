@@ -1,0 +1,41 @@
+body,
+html,
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-dropdown title {
+  color: blue;
+}
+
+.mega-menu {
+  padding: 20px;
+  align-items: center;
+  min-width: 100vw;
+  z-index: 1000;
+}
+
+.mega-menu>div {
+  flex: 1;
+  margin: 0 15px;
+}
+
+#basic-navbar-nav {
+  justify-content: center;
+}
+
+.mega-menu h5 {
+  margin-bottom: 10px;
+}
+
+.nav-dropdown .dropdown-item {
+  padding: 10px 20px;
+}
+
+.nav-dropdown .dropdown-divider {
+  background-color: #e9ecef;
+}

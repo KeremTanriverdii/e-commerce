@@ -1,0 +1,32 @@
+.img-zoom-container {
+    position: relative;
+    overflow: hidden;
+    --zoom-x: 50%;
+    --zoom-y: 50%;
+    --display: none;
+}
+
+.zoom-image {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3 ease;
+    transform-origin: var(--zoom-x) var(--zoom-y);
+    display: var(--display);
+}
+
+.zoom-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    /* Fare hareketini engellememesi için */
+}
+
+
+.img-zoom-container:hover .zoom-image {
+    transform: scale(2);
+}
