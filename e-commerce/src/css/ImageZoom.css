@@ -1,9 +1,6 @@
 .img-zoom-container {
     position: relative;
     overflow: hidden;
-    --zoom-x: 50%;
-    --zoom-y: 50%;
-    --display: none;
 }
 
 .zoom-image {
@@ -14,7 +11,7 @@
     display: var(--display);
 }
 
-.zoom-preview {
+.Nav .zoom-preview {
     position: absolute;
     top: 0;
     left: 0;
@@ -25,7 +22,6 @@
     pointer-events: none;
     /* Fare hareketini engellememesi için */
 }
-
 
 .img-zoom-container:hover .zoom-image {
     transform: scale(2);

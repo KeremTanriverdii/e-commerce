@@ -8,15 +8,19 @@ html,
   padding: 0;
 }
 
-.nav-dropdown title {
-  color: blue;
+.mega-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 100vw;
+  min-height: 8vh;
+  z-index: 1000;
 }
 
-.mega-menu {
-  padding: 20px;
-  align-items: center;
-  min-width: 100vw;
-  z-index: 1000;
+.mega-menu .nav-item {
+  font-family: sans-serif;
+  padding: 18px;
 }
 
 .mega-menu>div {
@@ -28,12 +32,9 @@ html,
   justify-content: center;
 }
 
-.mega-menu h5 {
-  margin-bottom: 10px;
-}
-
 .nav-dropdown .dropdown-item {
   padding: 10px 20px;
+  background-color: #000;
 }
 
 .nav-dropdown .dropdown-divider {

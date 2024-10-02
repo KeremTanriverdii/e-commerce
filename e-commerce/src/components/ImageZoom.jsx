@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import '../css/ImageZoom.css'
+import { Link } from 'react-router-dom';
 
 function ImageZoom({ src, alt = 'Zoomable Image', zoomScale = 2, className = '' }) {
     const imageZoomRef = useRef(null);
@@ -35,7 +36,7 @@ function ImageZoom({ src, alt = 'Zoomable Image', zoomScale = 2, className = '' 
                 '--display': zoomStyle.display,
             }}
         >
-            <img src={src} alt={alt} className="zoom-image" style={{ transform: `scale(${zoomScale})` }} />
+            <img className="zoom-image" style={{ transform: `scale(${zoomScale})` }} />
             <div
                 className="zoom-preview"
                 style={{
