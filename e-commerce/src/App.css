@@ -1,42 +1,129 @@
+@font-face {
+  font-family: 'ChunkFive';
+  src: url('./fonts/ChunkFive-Regular.woff') format('woff');
+  src: url('./fonts/ChunkFive-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body,
 html,
 #root {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  margin: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  height: 100%;
+  margin: 0%;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: 'ChunkFive';
 }
 
-.mega-menu {
+.customGradiant {
+  background: rgb(131, 58, 180);
+  background: radial-gradient(circle, rgba(131, 58, 180, 1) 0%, rgba(170, 74, 74, 1) 50%, rgba(252, 176, 69, 1) 100%);
+}
+
+/* .card-login {
   display: flex;
+  width: 100vw;
+  margin-top: 13px;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+} */
+
+.card-login-style {
+  display: flex;
+  border: 2px solid #0f2942;
+  width: 100%;
+}
+
+.form {
+  width: 100%;
+}
+
+.input-login {
+  width: 100%;
+  border-radius: 6px;
+  border-bottom: solid #0f2942;
+}
+
+.mega-menu-content {
+  display: flex;
+  gap: 10px;
+  width: 100vw;
+  padding-bottom: 10px;
+}
+
+.mega-menu-item {
+  flex: 1 1 calc(10% - 5px);
+  height: 55px;
+  box-sizing: border-box;
+}
+
+.mega-menu-item a {
+  display: flex;
+  height: 55px;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  min-width: 100vw;
-  min-height: 8vh;
-  z-index: 1000;
-}
-
-.mega-menu .nav-item {
-  font-family: sans-serif;
-  padding: 18px;
-}
-
-.mega-menu>div {
-  flex: 1;
-  margin: 0 15px;
-}
-
-#basic-navbar-nav {
-  justify-content: center;
-}
-
-.nav-dropdown .dropdown-item {
-  padding: 10px 20px;
-  background-color: #000;
 }
 
 .nav-dropdown .dropdown-divider {
-  background-color: #e9ecef;
+  background-color: #0f2942;
+}
+
+footer {
+  background-color: #222;
+  display: flex;
+  justify-content: center;
+  color: #fff;
+  align-items: flex-end;
+  width: 100%;
+  ;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.social-icons {
+  display: flex;
+}
+
+.social-icons li {
+  margin-right: 10px;
+}
+
+.copyright {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.newsletter-form button {
+  padding: 10px 15px;
+  border-radius: 4px;
+  background-color: #ff6600;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.newsletter-form button:hover {
+  background-color: #e65c00;
+}
+
+@media (max-width: 768) {
+
+  .card-login,
+  .form {
+    width: 375px;
+  }
+
+  .card-login-style {
+    width: 100vw
+  }
 }

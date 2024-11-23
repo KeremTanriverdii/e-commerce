@@ -1,11 +1,79 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, BrowserRouter as Router } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
+import './css/index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import HomePage from './pages/HomePage.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
+import CategoryPage from './pages/CategoryPage.jsx'
+import SubCategoryPage from './pages/SubCategoryPage.jsx'
+import ProductPage from './pages/ProductPage.jsx'
+import Login from './components/Login.jsx'
+import Register from './components/Register.jsx'
+import Basket from './pages/Basket.jsx'
+import OrderHistory from './pages/OrderHistory.jsx'
+import { Provider } from 'react-redux'
+import store from './store/store.js'
+import Payment from './pages/Payment.jsx'
+import { StrictMode } from 'react'
+import OrderSuccessfull from './pages/OrderSuccessfull.jsx'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />, // App'i ana bileşen yapıyoruz
+    errorElement: <NotFoundPage />, // Hatalı rotalarda yönlendirme
+    children: [
+      {
+        path: '/',
+        element: <HomePage />,
+        errorElement: <NotFoundPage />
+      },
+      {
+        path: '/basket',
+        element: <Basket />
+      },
+      {
+        path: 'order-history',
+        element: <OrderHistory />
+      },
+      {
+        path: 'order-successful',
+        element: <OrderSuccessfull />
+      },
+      {
+        path: 'basket/payment',
+        element: <Payment />
+      },
+      {
+        path: '/category/:categoryId',
+        element: <CategoryPage />
+      },
+      {
+        path: '/product/:productSlug',
+        element: <ProductPage />
+      },
+      {
+        path: '/category/:categoryId/:subCategory',
+        element: <SubCategoryPage />
+      },
+
+      {
+        path: '/login',
+        element: <Login />
+      },
+      {
+        path: '/register',
+        element: <Register />
+      }
+    ]
+  }]);
+
 
 createRoot(document.getElementById('root')).render(
-  <>
-    <App />
-  </>
+  <StrictMode>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </StrictMode>
 )

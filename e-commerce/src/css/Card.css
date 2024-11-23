@@ -1,0 +1,60 @@
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+
+.card button {
+    justify-content: end;
+    margin-top: 15px;
+    background-color: chocolate;
+    border-color: #fff;
+}
+
+.card {
+    width: 300px;
+    min-height: 200px;
+    align-items: center;
+    margin: 10px;
+    border-radius: 1rem;
+    border: 1px solid transparent;
+    backdrop-filter: blur(15px);
+    border-top-color: rgba(225, 225, 225, 0.5);
+    border-left-color: rgba(225, 225, 225, 0.5);
+    border-bottom-color: rgba(225, 225, 225, 0.1);
+    border-right-color: rgba(225, 225, 225, 0.1);
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+}
+
+/* Mor Arka Plan için Gradient */
+.bg-gradient-primary {
+    margin-left: auto;
+    background: linear-gradient(to bottom right, #9b4dca, #6a2d91);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    color: white;
+    text-align: center;
+}
+
+@media (max-width:768px) {
+
+    .product-list {
+        max-height: calc(100vh - 200px);
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    .product-list a {
+        width: 45%;
+    }
+
+
+}
