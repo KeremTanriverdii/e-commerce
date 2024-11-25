@@ -1,13 +1,15 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Table, Button, Form, Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { clearCart, removeToCart } from '../store/cartSlice';
 
 const Basket = () => {
     const cartItems = useSelector((state) => state.cart.items); // Sepetteki ürünler
     const uniqueItemCount = useSelector((state) => state.cart.uniqueItemCount); // Toplam ürün sayısı
+    const dispatch = useDispatch();
     console.log(cartItems)
     // Sipariş Özeti Verileri
     const subtotal = cartItems.reduce((acc, item) => acc + item.discountPrice * item.quantity, 0);
@@ -15,6 +17,19 @@ const Basket = () => {
     const shipping = 10; // Sabit kargo ücreti
 
     const grandTotal = subtotal + shipping;
+
+    const handleRemoveItem = (item) => {
+        if(item && item.id && item.selectedSize){
+            dispatch(removeToCart({
+                id:item.id,
+                selectedSize:item.selectedSize
+            }))
+        }
+    }
+
+    const handleAllClear = () => {
+        dispatch(clearCart())
+    }
 
     return (
         <div className="my-5">
@@ -76,7 +91,7 @@ const Basket = () => {
                                     </td>
                                     <td>${(item.discountPrice * item.quantity).toFixed(2)}</td>
                                     <td>
-                                        <Button variant="outline-danger" onClick={() => handleRemoveItem(item.id)}>
+                                        <Button variant="outline-danger" onClick={() => handleRemoveItem(item)}>
                                             <FontAwesomeIcon icon={faTrash} style={{ color: "#000", }} />
                                         </Button>
                                     </td>
@@ -84,6 +99,15 @@ const Basket = () => {
                             ))}
                         </tbody>
                     </Table>
+                    <div className='d-flex justify-content-end align-items-center '>
+                    <Button  
+                    className='d-flex align-items-center'
+                    variant='danger'
+                    onClick={() => handleAllClear()}>Clear All
+                    <FontAwesomeIcon icon={faTrash} style={{ color: "#000", marginLeft: '15px' }} />
+                    </Button>
+                    </div>
+
                 </Col>
 
                 {/* Sipariş Özeti */}

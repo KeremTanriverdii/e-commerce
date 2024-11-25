@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import '../css/Card.css'
 import { Navigation, Pagination, EffectCoverflow } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Button, ButtonGroup, Alert, Row, Col } from 'react-bootstrap'
+import { Button, ButtonGroup, Alert, Row, Col, Accordion } from 'react-bootstrap'
 import 'swiper/css'
 import 'swiper/css/effect-coverflow'
 import 'swiper/css/navigation'
@@ -15,6 +15,7 @@ function ProductPageCard({ productDetails, id }) {
     const [searchParams] = useSearchParams()
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedColor, setSelectedColor] = useState(productDetails.variants[0]?.color || null);
+    const [selectedImage, setSelectedImage] = useState(productDetails.variants[0].imageUrl);
     const [cartMessage, setCartMessage] = useState("");
     const [selectedVariant, setSelectedVariant] = useState(null);
     const navigate = useNavigate()
@@ -37,7 +38,7 @@ function ProductPageCard({ productDetails, id }) {
         setCartMessage(''); // Hata mesajını sıfırla
         updateUrl(selectedSize, color)
     };
-
+   
     const updateUrl = (size, color) => {
         const searchParams = new URLSearchParams(location.search)
         if (size) {
@@ -79,118 +80,127 @@ function ProductPageCard({ productDetails, id }) {
             setCartMessage('Please choose a color')
             return
         }
-        const selectedVariant = productDetails.variants.find(variant => variant.color === selectedColor)
+        const selectedVariant = productDetails.variants.find((variant) => {
+            return (
+                variant.color === selectedColor && 
+                productDetails.sizes.includes(selectedSize)
+            );
+        });
+    
         if (selectedVariant) {
             const variantId = selectedVariant.variantId
             const variantImageUrl = selectedVariant.imageUrl
-            console.log(variantId)
+            console.log(variantImageUrl)
 
             dispatch(addToCart({
                 ...productDetails,
                 selectedSize,
                 selectedColor,
-                id: variantId,
+                id: selectedVariant.variantId,
                 price: productDetails.price,
                 variantImageUrl: variantImageUrl
             }))
 
-            setCartMessage(`Product (${productDetails.name})- ${selectedSize} - ${selectedColor} - ${selectedVariant} size add to cart succesfully`);
+            setCartMessage(`Product ${productDetails.name}- ${selectedSize} - ${selectedColor} size add to cart succesfully`);
         } else {
             setCartMessage("`The selected size (${selectedSize}) and color (${selectedColor}) combination is out of stock.`");
         }
     }
-
+    console.log(handleAddToCart)
     return (
-        <Row >
-            <Col sm={4} md={4} lg={4}>
-                <Swiper
-                    effect={'coverflow'}
-                    grabCursor={true}
-                    loop={true}
-                    autoplay={true}
-                    coverflowEffect={{
-                        rotate: 0,
-                        stretch: 0,
-                        depth: 0,
-                        modifier: 1,
-                    }}
-                    pagination={{ clickable: true }}
-                    navigation={{
-                        clickable: true,
-                        prevEl: '.swiper-button-prev',
-                        nextEl: '.swiper-button-next'
-                    }}
-                    modules={[Navigation, Pagination, EffectCoverflow]}
-                    className='swiper-container'
+        <Row className="mt-3">
+        {/* Sol Tarafta - Ürün Görselleri */}
+        <Col sm={12} md={7} lg={6} className="d-flex justify-content-center align-items-center position-relative">
+          <img
+            src={selectedImage}
+            alt="Product"
+            className="img-fluid"
+            style={{ width: '100%', height: 'auto' }}
+          />
+          {/* Sağda Thumbnail Resimler */}
+         
+        </Col>
+  
+        {/* Sağ Tarafta - Ürün Bilgileri ve Seçenekler */}
+        <Col sm={12} md={5} lg={6} className="d-flex flex-column mt-3">
+          {/* Ürün Başlık ve Açıklama */}
+          <div className="product-details mb-3">
+            <h3 className="font-weight-bold">{productDetails.name}</h3>
+            <h4 className="font-weight-bold">${productDetails.price}</h4>
+          </div>
+  
+          {/* Beden Seçenekleri */}
+          <div className="mb-3">
+          <p>Variants:</p>
+         
+          {productDetails.variants.map((item,index) => (
+              <ul className='d-inline'  key={index}>
+                <img
+                  src={item.imageUrl}
+                  alt={`Thumbnail`}
+                  className=" img-fluid "
+                  style={{ width: '60px', height: '80px', cursor: 'pointer' }}
+                  onClick={() => handleColor(item.color)}
+                />
+                </ul>
+              ))} 
+          </div>
+
+            <div className='mt-3'>
+            <p className="mb-2"><strong>Size:</strong></p>
+            <ButtonGroup className="gap-2">
+              {sizes.map((sizeItem, index) => (
+                <Button
+                  key={index}
+                  variant={selectedSize === sizeItem ? "primary" : "outline-secondary"}
+                  onClick={() => handleSize(sizeItem)}
+                  className="px-2 py-2"
                 >
-                    {selectedColor && (
-                        <div>
-                            <SwiperSlide className='d-flex justify-content-center'>
-                                <img src={productDetails.variants.find(variant =>
-                                    variant.color === selectedColor)?.imageUrl}
-                                    width={600}
-                                    height={800}
-                                    className='img-fluid'
-                                    alt={`product image +1`} />
-                            </SwiperSlide>
-                        </div>
-                    )}
-                    <div className="slider-controler">
-                        <div className="swiper-button-prev slider-arrow">
-                            <ion-icon name='arrow-back-outline'></ion-icon>
-                        </div>
-                        <div className="swiper-button-next slider-arrow">
-
-                            <ion-icon name='arrow-forward-outline'></ion-icon>
-                        </div>
-                        <div className='swiper-pagination'>
-                        </div>
-                    </div>
-                </Swiper>
-            </Col>
-
-            <Col>
-                <p className=''>variant:
-                    <ButtonGroup className=' gap-3 mt-3 rounded'>
-                        {productDetails.variants.map((item, index) => (
-                            <Button
-                                key={index}
-                                onClick={() => handleColor(item.color)}
-                                className=''>
-                                {item.color}
-                            </Button>
-                        ))}
-                    </ButtonGroup>
-                </p>
-                <ButtonGroup>
-                    {sizes.map((sizeItem, index) => (
-                        <Button
-                            key={index}
-                            className='mt-5 h-25'
-                            variant={selectedSize === sizeItem ? 'primary' : 'outline-warning'}
-                            onClick={() => handleSize(sizeItem)}>
-                            {sizeItem}
-                        </Button>
-                    ))}
-                </ButtonGroup>
-                <div>
-                    <Button variant='success'
-                        onClick={handleAddToCart}>Add To Cart</Button>
-                </div>
-            </Col>
-
-            <Col sm={1} md={2} lg={2}>
-
-                {cartMessage && (
-                    <div>
-
-                        <Alert className='mt-3' variant={selectedSize ? "success" : "danger"}>
-                            {cartMessage}
-                        </Alert>
-                    </div>
-                )}
-            </Col>
-        </Row>
+                  {sizeItem}
+                </Button>
+              ))}
+            </ButtonGroup>
+            </div>
+          {/* Fiyat ve Sepete Ekle Butonu */}
+          <div className="d-flex justify-content-end w-100 align-items-center mt-2">
+            
+            <Button 
+            className='p-3'
+            variant="success" onClick={handleAddToCart}>
+              Add to Cart
+            </Button>
+          </div>
+          {cartMessage && (
+                <Alert className='mt-3' variant={selectedSize ? 'success' : 'danger'}>
+                    {cartMessage}
+                </Alert>
+            )}
+            <div>
+                <Accordion defaultActiveKey={0} className='mt-3'>
+                    <Accordion.Item eventKey='0'>
+                    <Accordion.Header>Product Features</Accordion.Header>
+                    <Accordion.Body className='h-100' >
+                    <ol>
+                    <li>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                         
+                           </li>
+                    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                         Doloremque quam sequi sapiente voluptates, explicabo qui quaerat!
+                          Et quos quis iure, corrupti magnam nostrum velit, ullam non provident
+                           ipsam repudiandae ab.</li>
+                    <li>Doloremque quam sequi sapiente voluptates, explicabo qui quaerat!
+                    Et quos quis iure, corrupti magnam nostrum velit, ullam non provident</li>
+                    <li>Doloremque quam sequi sapiente voluptates, explicabo qui quaerat!
+                    Et quos quis iure, corrupti magnam nostrum velit, ullam non provident</li>
+                </ol>
+                    </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+            </div>
+        </Col>
+        
+      </Row>
     )
 }
 

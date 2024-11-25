@@ -1,8 +1,9 @@
 .product-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 10px;
+    align-items: end;
 }
 
 
@@ -14,17 +15,12 @@
 }
 
 .card {
-    width: 300px;
+    width: 290.625px;
     min-height: 200px;
     align-items: center;
     margin: 10px;
     border-radius: 1rem;
-    border: 1px solid transparent;
     backdrop-filter: blur(15px);
-    border-top-color: rgba(225, 225, 225, 0.5);
-    border-left-color: rgba(225, 225, 225, 0.5);
-    border-bottom-color: rgba(225, 225, 225, 0.1);
-    border-right-color: rgba(225, 225, 225, 0.1);
 }
 
 .error-message {
@@ -45,15 +41,15 @@
 @media (max-width:768px) {
 
     .product-list {
-        max-height: calc(100vh - 200px);
+        width: 95%;
     }
 
     .card {
-        width: 100%;
+        width: 95%;
     }
 
     .product-list a {
-        width: 45%;
+        width: 48%;
     }
 
 

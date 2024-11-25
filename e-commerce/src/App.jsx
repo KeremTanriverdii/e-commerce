@@ -9,7 +9,9 @@ function App() {
     <>
       <NavbarX />
       <main className='container'>
-        <Outlet />
+        <div  className='content'>
+        <Outlet/>
+        </div>
       </main>
       <Footer />
     </>

@@ -47,14 +47,11 @@ const cartSlice = createSlice({
             const limitedData = state.items.map(item => ({
                 id: item.id,
                 name: item.name,
-                variantId: item.variantId,
                 selectedSize: item.selectedSize,
                 color: item.selectedColor,
                 price: item.price,
                 slug: item.slug,
                 quantity: item.quantity,
-                imageUrl: item.imageUrl,
-                variantId: item.variantId,
                 variantImageUrl: item.variantImageUrl
             }))
 
@@ -68,9 +65,9 @@ const cartSlice = createSlice({
         },
         // Delete product basket and cookie and return empty array
         removeToCart(state, action) {
-            const { id } = action.payload
+            const { id,selectedSize } = action.payload
 
-            state.items = state.items.filter(item => item.id !== id);
+            state.items = state.items.filter(item => item.id !== id && item.selectedSize !== selectedSize);
 
             const limitedData = state.items.map(item => ({
                 id: item.id,

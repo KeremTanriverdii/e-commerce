@@ -55,7 +55,7 @@ function NavbarX() {
 
     return (
         <>
-            <Navbar expand="md" bg="light" className='px-3'>
+            <Navbar expand="md"  className='px-4'>
                 <Navbar.Brand href="/">Lorem Shopping</Navbar.Brand>
 
                 {/* Mobile Review */}
