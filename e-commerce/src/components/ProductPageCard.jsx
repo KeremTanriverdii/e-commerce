@@ -12,16 +12,21 @@ import { addToCart } from '../store/cartSlice'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 function ProductPageCard({ productDetails, id }) {
-    const [searchParams] = useSearchParams()
-    const [selectedSize, setSelectedSize] = useState(null);
-    const [selectedColor, setSelectedColor] = useState(productDetails.variants[0]?.color || null);
-    const [selectedImage, setSelectedImage] = useState(productDetails.variants[0].imageUrl);
-    const [cartMessage, setCartMessage] = useState("");
-    const [selectedVariant, setSelectedVariant] = useState(null);
-    const navigate = useNavigate()
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(productDetails.variants[0]?.color || null);
+  const [selectedImage, setSelectedImage] = useState(productDetails.variants[0].imageUrl);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  
+  const [cartMessage, setCartMessage] = useState("");
+  const [showAlet ,setShowAlert] = useState(false)
+  
+  const sizes = productDetails.sizes || [];
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
     const location = useLocation()
-    const sizes = productDetails.sizes || [];
+  
     const dispatch = useDispatch();
+  
 
     const handleSize = (size) => {
         console.log('clicked size', size)
@@ -33,9 +38,9 @@ function ProductPageCard({ productDetails, id }) {
     const handleColor = (color) => {
         const variant = productDetails.variants.find(variant => variant.color === color);
         setSelectedColor(color);
-        setSelectedSize(null); // Yeni renk seçildiğinde beden sıfırlanır
-        setSelectedVariant(variant); // Seçilen varyant bilgisi
-        setCartMessage(''); // Hata mesajını sıfırla
+        setSelectedSize(null); 
+        setSelectedVariant(variant); 
+        setCartMessage(''); 
         updateUrl(selectedSize, color)
     };
    
@@ -102,11 +107,22 @@ function ProductPageCard({ productDetails, id }) {
             }))
 
             setCartMessage(`Product ${productDetails.name}- ${selectedSize} - ${selectedColor} size add to cart succesfully`);
+            setShowAlert(true)
+
+            setTimeout(() => {
+              setShowAlert(false);
+            }, 3000)
+        
         } else {
-            setCartMessage("`The selected size (${selectedSize}) and color (${selectedColor}) combination is out of stock.`");
+            setCartMessage(`The selected size : ${selectedSize} and color : ${selectedColor} combination is out of stock.`);
+            setShowAlert(true)
+
+            setTimeout(() => {
+              setShowAlert(false);
+            }, 2300)
         }
     }
-    console.log(handleAddToCart)
+
     return (
         <Row className="mt-3">
         {/* Sol Tarafta - Ürün Görselleri */}
@@ -170,8 +186,11 @@ function ProductPageCard({ productDetails, id }) {
               Add to Cart
             </Button>
           </div>
-          {cartMessage && (
-                <Alert className='mt-3' variant={selectedSize ? 'success' : 'danger'}>
+          {showAlet && (
+                <Alert className='mt-3' 
+                variant={selectedSize ? 'success' : 'danger'}
+                onClose={() => setShowAlert(false)}
+                dismissible >
                     {cartMessage}
                 </Alert>
             )}
@@ -180,15 +199,15 @@ function ProductPageCard({ productDetails, id }) {
                     <Accordion.Item eventKey='0'>
                     <Accordion.Header>Product Features</Accordion.Header>
                     <Accordion.Body className='h-100' >
-                    <ol>
+                    <ol className='d-flex flex-column gap-4'>
                     <li>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                         
-                           </li>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit.quam sequi 
+                        sapiente voluptates,
+                    </li>
                     <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                          Doloremque quam sequi sapiente voluptates, explicabo qui quaerat!
-                          Et quos quis iure, corrupti magnam nostrum velit, ullam non provident
-                           ipsam repudiandae ab.</li>
+                          Et quos quis.
+                    </li>
                     <li>Doloremque quam sequi sapiente voluptates, explicabo qui quaerat!
                     Et quos quis iure, corrupti magnam nostrum velit, ullam non provident</li>
                     <li>Doloremque quam sequi sapiente voluptates, explicabo qui quaerat!

@@ -30,7 +30,7 @@ function OrderSuccessfull() {
                             <p>Order ID: {orderId}</p>
                             <p>Total Price: {totalPrice}</p>
                             <div className='d-flex'>
-                                <Link to={'order-history'} className='mx-auto'>
+                                <Link to={'/order-history'} className='mx-auto'>
                                     <Button type='button'
                                         className=''>Go check to order status</Button>
                                 </Link>

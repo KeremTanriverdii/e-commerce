@@ -9,7 +9,7 @@ function HomePage() {
     return (
         <div className='d-flex'>
             <Link to={`category/kids`} className='mx-auto mt-4'>
-                <img src={pictureOne} alt="hero_image" />
+                <img src={pictureOne} alt="hero_image" className='img-fluid'/>
             </Link>
         </div>
     )

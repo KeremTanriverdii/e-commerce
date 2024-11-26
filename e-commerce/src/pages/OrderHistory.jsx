@@ -3,12 +3,13 @@ import { Container, Accordion, Card } from 'react-bootstrap';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../store/Firebase';
 import useAuth from '../hooks/useAuth';
+import { Link } from 'react-router-dom';
 
 function OrderHistory() {
     const { user } = useAuth();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    
     useEffect(() => {
         const fetchOrders = async () => {
             if (!user) {
@@ -57,6 +58,7 @@ function OrderHistory() {
                                         src={order.items[0]?.variantImageUrl}
                                         width={100}
                                         height={100}
+                                        className='img-fluid'
                                         alt="Order Thumbnail"
                                     />
                                     <p>
@@ -74,10 +76,9 @@ function OrderHistory() {
                                     <Card key={index} className="w-100 flex-row ">
                                         <Card.Body className="me-auto">
                                             <img
-                                                className=''
+                                                className='img-fluid'
                                                 onClick={() => handleProductClick(item)}
                                                 src={item.variantImageUrl}
-
                                                 alt={item.name}
                                                 style={{ cursor: 'pointer' }}
                                             />

@@ -38,8 +38,8 @@ const cartSlice = createSlice({
                     imageUrl: newItem.imageUrl,
                     quantity: newItem.quantity || 1,
                     slug: newItem.slug,
-                    selectedSize: newItem.selectedSize,  // Beden
-                    selectedColor: newItem.selectedColor,  // Renk
+                    selectedSize: newItem.selectedSize,  
+                    selectedColor: newItem.selectedColor,
                     variantId: newItem.variantId,
                     variantImageUrl: newItem.variantImageUrl
                 });
@@ -67,7 +67,7 @@ const cartSlice = createSlice({
         removeToCart(state, action) {
             const { id,selectedSize } = action.payload
 
-            state.items = state.items.filter(item => item.id !== id && item.selectedSize !== selectedSize);
+            state.items = state.items.filter(item => !(item.id === id && item.selectedSize === selectedSize));
 
             const limitedData = state.items.map(item => ({
                 id: item.id,
@@ -84,22 +84,14 @@ const cartSlice = createSlice({
             cookies.set('cart', JSON.stringify(limitedData), { path: '/', expires: new Date(Date.now() + 604800000) });
         },
         // Reduce product quantity
-        reduceQuantity(state, action) {
-            const newItem = action.payload;
-            const existingItem = state.items.find(item => item.id === newItem.id && item.selectedSize === newItem.selectedSize)
-            if (existingItem && existingItem.quantity > 1) {
-                existingItem.quantity -= 1;
+        uptadeQuantity(state, action) {
+            const {id,selectedSize,quantity} = action.payload;
+            const item = state.items.find(item => item.id === id && item.selectedSize === selectedSize)
+            if (item) {
+                item.quantity= quantity;
             }
-            const limitedData = state.items.map(item => ({
-                id: item.id,
-                name: item.name,
-                selectedSize: item.selectedSize,
-                quantity: item.quantity,
-                imageUrl: item.imageUrl
-            }))
-            state.totalQuantity = state.items.reduce((acc, item) => acc + item.quantity, 0);
             // Save Cookie
-            cookies.set('cart', JSON.stringify(limitedData), {
+            cookies.set('cart', JSON.stringify(state.items), {
                 path: '/', expires:
                     new Date(Date.now() + 604800000)
             })
@@ -114,5 +106,5 @@ const cartSlice = createSlice({
     },
 });
 // export to all redux funcinality
-export const { addToCart, removeToCart, clearCart, reduceQuantity } = cartSlice.actions;
+export const { addToCart, removeToCart, clearCart, uptadeQuantity } = cartSlice.actions;
 export default cartSlice.reducer;

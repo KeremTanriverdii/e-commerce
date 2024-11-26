@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Alert, Button, Card, Offcanvas } from 'react-bootstrap'
-
 import CreditCart from '../components/CreditCart'
 import ExistingCreditCard from '../components/ExistingCreditCard'
 import { useSelector } from 'react-redux'
@@ -9,8 +8,6 @@ import Address from '../components/Address'
 import useAuth from "../hooks/useAuth"
 import { db } from '../store/Firebase'
 import { addDoc, collection, or, setDoc } from 'firebase/firestore'
-import { doc } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 function Payment() {
     const { user } = useAuth()
@@ -32,6 +29,7 @@ function Payment() {
     const [showB, setShowB] = useState(false)
     const [contentA, setContentA] = useState('initialA');
     const [contentB, setContentB] = useState('initialB');
+    const [messages,setMessage] = useState('') 
 
     useEffect(() => {
         const calculateTotalPrice = () => {
@@ -74,39 +72,40 @@ function Payment() {
         setContentB('initialB')
         setShowB(true)
     }
-    function uuidv4() {
-        return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-            (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
-        );
-    }
+  
     const addOrder = async () => {
         if (!user) {
             alert('Please a login')
             return;
         }
-        try {
-            const orderRef = collection(db, 'users', user.uid, 'orders')
-            console.log(orderRef)
-            const orderDetails = {
-                items: cartItems,
-                orderDate: new Date(),
-                totalPrice,
-                status: 'completed',
-                address: selectedAddress,
-                card: selectedCard,
-            }
-            const newDocRef = await addDoc(orderRef, orderDetails)
-            navigate('/order-successful', {
-                state: {
-                    orderId: newDocRef.id,
+        if(selectedAddress && selectedCard){
+            try {
+                const orderRef = collection(db, 'users', user.uid, 'orders')
+                console.log(orderRef)
+                const orderDetails = {
+                    items: cartItems,
+                    orderDate: new Date(),
                     totalPrice,
+                    status: 'completed',
+                    address: selectedAddress,
+                    card: selectedCard,
                 }
+                const newDocRef = await addDoc(orderRef, orderDetails)
+                navigate('/order-successful', {
+                    state: {
+                        orderId: newDocRef.id,
+                        totalPrice,
+                    }
+                }
+                )
             }
-            )
+            catch (error) {
+                console.log('Order add error:', error)
+            }
+        }else{
+            setMessage('');
         }
-        catch (error) {
-            console.log('Order add error:', error)
-        }
+        setMessage('Please choose card and address')
     }
 
     return (
@@ -151,7 +150,8 @@ function Payment() {
                     <Button
                         onClick={() => addOrder()}>
                         Complete Shopping
-                    </Button>
+                    </Button>                    
+                        {messages}
                 </Card>
 
             </Card>
