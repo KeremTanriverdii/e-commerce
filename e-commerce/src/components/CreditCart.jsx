@@ -4,15 +4,16 @@ import { ErrorMessage, Field, Formik } from 'formik'
 import DatePicker from 'react-datepicker'
 import { format } from 'date-fns'
 import * as Yup from 'yup'
-import { Button } from 'react-bootstrap'
+import { Button, Form } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { Navigate, useNavigate } from 'react-router-dom'
 import { addCreditCard } from '../store/creditCartSlice'
 
 function CreditCart({ onBackToOffCanvasMenuA }) {
+    // State for the date picker
     const [startDate, setStartDate] = useState(null)
-    const navigate = useNavigate()
+    // creditCartSlice redux with dispath
     const dispatch = useDispatch()
+    // Necessary field for schema
     const validationSchema = Yup.object({
         cardNumber: Yup.string()
             .required('Required')
@@ -29,7 +30,6 @@ function CreditCart({ onBackToOffCanvasMenuA }) {
             .matches(/^[a-zA-Z\s]+$/, 'Cardholder name must only contain letters and spaces'),
     })
 
-
     return (
         <Formik
             initialValues={{
@@ -38,55 +38,50 @@ function CreditCart({ onBackToOffCanvasMenuA }) {
                 cvc: '',
                 cardholderName: '',
             }}
+            // Add validation schema
             validationSchema={validationSchema}
             onSubmit={(values) => {
+                // Add redux store credit card
                 dispatch(addCreditCard(values))
+                // Back the previously off canvas menu
                 onBackToOffCanvasMenuA()
-                console.log('Form values', values)
-                console.log('dispatch is programming')
             }}
         >
-            {({ handleSubmit, values, setFieldValue }) => (
-                <form onSubmit={handleSubmit}
+            {({ handleSubmit, values }) => (
+                <Form onSubmit={handleSubmit}
+                    className='form-control'
                 >
-                    <h2>Yeni Kart</h2>
-                    <div className=''>
-                        {/* Card number input field */}
-                        <Field
-                            name="cardNumber"
-                            type="text"
-                            maxLength="16"
-                            placeholder="Kart Numarası"
-                            values={values.cardNumber}
-                            className="w-100 mb-2"
-                        // onChange={(e) => {
-                        //     const formattedValue = e.target.value
-                        //         .replace(/\D/g, '')
-                        //         .slice(0, 16)
-                        //         .replace(/(\d{4})(?=\d)/g, '$1 ')
-                        //         .trim();
-                        //     setFieldValue('cardNumber', formattedValue);
-                        // }}
-                        />
-                        <ErrorMessage name="cardNumber" component="div" />
+                    <h2>New Cart</h2>
+                    {/* Card number input field */}
+                    <Field
+                        name="cardNumber"
+                        type="text"
+                        maxLength="16"
+                        placeholder="Kart Numarası"
+                        values={values.cardNumber}
+                        className="w-100 mb-2 form-control"
+                    />
+                    {/* İf Error state will be return message  */}
+                    <ErrorMessage name="cardNumber" component="div" className='d-flex text-danger' />
 
-                        {/* ExpirationDate input field with inline formatting */}
+                    {/* ExpirationDate input field with inline formatting */}
+                    <div className='d-flex form-group'>
                         <Field name="expirationDate">
                             {({ field, form }) => (
                                 <DatePicker
                                     maxLength='5'
-                                    className="w-30"
+                                    className="form-control"
                                     selected={startDate}
                                     onChange={(date) => {
+                                        // Choosen date add the startDate state
                                         setStartDate(date);
                                         form.setFieldValue('expirationDate', format(date, 'MM/yy'));
                                     }}
                                     dateFormat="MM/yy"
                                     showMonthYearPicker
                                     placeholderText="MM/YY"
-
                                 >
-                                    <ErrorMessage name="expirationDate" component="div" />
+                                    <ErrorMessage name="expirationDate" component="div" className='d-flex text-danger' />
                                 </DatePicker>
 
                             )}
@@ -97,25 +92,28 @@ function CreditCart({ onBackToOffCanvasMenuA }) {
                             name='cvc'
                             maxLength='3'
                             placeholder='CVC'
-                            className='w-50 ms-auto' />
-                        <ErrorMessage name="cvc" component="div" />
+                            className='d-flex w-50 ms-1 form-control'
+                        />
+                        <ErrorMessage name="cvc" component="div" className='d-flex text-danger' />
 
                     </div>
                     {/* Cardholder's Name input field */}
                     <Field name="cardholderName"
                         placeholder='Cardholder Name'
-                        className='w-100 mt-2' />
-                    <ErrorMessage name="cardholderName" component="div" />
+                        className='w-100 mt-2 form-control'
+                    />
+                    <ErrorMessage name="cardholderName" component="div" className='d-flex text-danger' />
+
                     {/* Card Save Button */}
                     <Button
                         type='submit'
                         size='lg'
                         variant='warning'
-                        className='w-100 mt-3'
+                        className='w-100 mt-3 form-control'
                     >
                         Save Card
                     </Button>
-                </form>
+                </Form>
             )}
         </Formik>
     )

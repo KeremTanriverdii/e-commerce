@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { db } from '../store/Firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import ProductCard from '../components/ProductCard';
 import ProductPageCard from '../components/ProductPageCard';
 
 function ProductPage() {
@@ -40,7 +39,7 @@ function ProductPage() {
         return <div>no products avaible</div>
     }
     return (
-        <ProductPageCard productDetails={product.productsObj} id={product.id} />
+        <ProductPageCard productDetails={product.productsObj} />
     )
 }
 

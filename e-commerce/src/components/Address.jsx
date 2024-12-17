@@ -3,12 +3,12 @@ import { ErrorMessage, Field, Formik } from 'formik'
 import * as Yup from 'yup'
 import { useDispatch } from 'react-redux'
 import { addAddress } from '../store/address'
-import { Navigate } from 'react-router-dom'
-import { Button } from 'react-bootstrap'
+import { Button, Form } from 'react-bootstrap'
 
 function Address({ onBackToOffCanvasMenuB }) {
     const dispatch = useDispatch()
 
+    // User address validation Schema with Yup
     const validationSchema = Yup.object({
         addressName: Yup.string()
             .required(''),
@@ -26,6 +26,7 @@ function Address({ onBackToOffCanvasMenuB }) {
     })
 
     return (
+        // Formik user adress
         <Formik
             initialValues={{
                 addressName: "",
@@ -42,7 +43,8 @@ function Address({ onBackToOffCanvasMenuB }) {
             }}
         >
             {({ handleSubmit, values }) => (
-                <form onSubmit={handleSubmit}
+                <Form onSubmit={handleSubmit}
+                    className='form-control'
                 >
                     <h2>New Address</h2>
                     <div className=''>
@@ -50,6 +52,7 @@ function Address({ onBackToOffCanvasMenuB }) {
                             name="addressName"
                             type="text"
                             placeholder="Addres Name"
+                            className="form-control mb-1"
                         />
                         <ErrorMessage name='addressName' component="div" />
                         {/* Street Address input field */}
@@ -57,7 +60,7 @@ function Address({ onBackToOffCanvasMenuB }) {
                             name="streetAddress"
                             type="text"
                             placeholder="Street Address"
-                            className="w-100 mb-2"
+                            className="w-100 mb-2 form-control"
 
                         />
                         <ErrorMessage name="streetAddress" component="div" />
@@ -66,7 +69,7 @@ function Address({ onBackToOffCanvasMenuB }) {
                             name="city"
                             type="text"
                             placeholder="City"
-                            className="w-100 mb-2"
+                            className="w-100 mb-2 form-control"
 
                         />
                         <ErrorMessage name="city" component="div" />
@@ -76,19 +79,21 @@ function Address({ onBackToOffCanvasMenuB }) {
                             name='zipCode'
                             maxLength={5}
                             placeholder='Zip Code'
-                            className="w-30"
+                            className="w-30 form-control"
                         />
                         <ErrorMessage name="zipCode" component="div" />
                         <Field
                             name='district'
                             placeholder='district'
+                            className="form-control mb-1 mt-2"
                         />
                         <ErrorMessage name="district" component="div" />
                         {/* Country input field */}
                         <Field
                             name='country'
                             placeholder='Country'
-                            className='w-50 ms-auto' />
+                            className='form-control'
+                        />
                         <ErrorMessage name="country" component="div" />
 
                     </div>
@@ -103,7 +108,7 @@ function Address({ onBackToOffCanvasMenuB }) {
                     >
                         Save Card
                     </Button>
-                </form>
+                </Form>
             )}
 
         </Formik>

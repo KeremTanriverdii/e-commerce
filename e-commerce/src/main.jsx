@@ -18,35 +18,34 @@ import Payment from './pages/Payment.jsx'
 import { StrictMode } from 'react'
 import OrderSuccessfull from './pages/OrderSuccessfull.jsx'
 
+// Dynamic Routes
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />, // App'i ana bileşen yapıyoruz
-    errorElement: <NotFoundPage />, // Hatalı rotalarda yönlendirme
+    element: <App />,
     children: [
       {
         path: '/',
         element: <HomePage />,
-        errorElement: <NotFoundPage />
       },
       {
         path: '/basket',
         element: <Basket />
       },
       {
-        path: 'order-history',
+        path: '/order-history',
         element: <OrderHistory />
       },
       {
-        path: 'order-successful',
+        path: '/order-successful',
         element: <OrderSuccessfull />
       },
       {
-        path: 'basket/payment',
+        path: '/basket/payment',
         element: <Payment />
       },
       {
-        path: '/category/:categoryId',
+        path: '/category/:categoryId/all',
         element: <CategoryPage />
       },
       {
@@ -65,6 +64,9 @@ const router = createBrowserRouter([
       {
         path: '/register',
         element: <Register />
+      }, {
+        path: '*',
+        element: <NotFoundPage />
       }
     ]
   }]);

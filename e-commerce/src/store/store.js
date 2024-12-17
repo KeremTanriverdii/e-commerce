@@ -10,13 +10,16 @@ const initialCards = savedCards ? JSON.parse(savedCards) : [];
 const savedAddress = sessionStorage.getItem('address');
 const initialAddress = savedAddress ? JSON.parse(savedAddress) : [];
 
+// İnitial to be made when starting redux
 const store = configureStore({
     reducer: {
+        // All redux store 
         cart: cartReducer,
         credit: creditCardReducer,
         address: addressReducer,
         order: orderReducer,
     },
+    // İnitial in page get be session storage
     preloadedState: {
         credit: {
             items: Array.isArray(initialCards) ? initialCards : [],

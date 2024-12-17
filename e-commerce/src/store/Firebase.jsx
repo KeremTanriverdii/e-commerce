@@ -4,6 +4,9 @@ import fireConfig from './Fire.json'
 import { getAuth } from 'firebase/auth';
 import { GoogleAuthProvider } from 'firebase/auth';
 
+// İnitial to be made when starting Firebase
+
+// Get Firebase Project SDK 
 const firebaseConfig = {
     apiKey: fireConfig.apiKey,
     authDomain: fireConfig.authDomain,

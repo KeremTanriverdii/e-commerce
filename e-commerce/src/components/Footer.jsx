@@ -1,47 +1,52 @@
+import { faFacebook, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faMapLocationDot, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import { Col, Row } from 'react-bootstrap';
 
 function Footer() {
     return (
         <footer>
-            <div className='footer-container'>
-                <div className="row">
-                    <div className="col">
-                        <img src="logo.png" alt="Logo" />
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae quae obcaecati sed tenetur iusto! Veritatis voluptatem commodi illum placeat fugit! Perferendis quas praesentium expedita delectus? Assumenda impedit quae mollitia deleniti?</p>
+            <Row className='d-flex justify-content-center'>
+                <Col md={4} lg={3} >
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSW9uofUkidGKW0_bZklKhW3g1pr7A7QM5i5w&s"
+                        className='img-fluid' width={60} height={60} alt="Logo" />
+                    <p className='w-50'>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                </Col>
+
+                <Col md={4} lg={3} className='d-flex '>
+                    <div className='mt-1 me-2'>
+                        <FontAwesomeIcon icon={faPhone} style={{ color: "#FFD43B", }} />
                     </div>
-                    <div className="col">
-                        <h3>Office</h3>
-                        <p>lorem dipisicing elit. Molestiae quae obcaecati sed tenetur iusto! Veritatis voluptatem commodi illum,Turkey</p>
-                        <p>ahmetk.tanriverdi@gmail.com</p>
-                        <p>+90-0123456789</p>
+                    <div>
+                        <h3>Phone</h3>
+                        <p>+90 333 111 54 35
+                            <br />
+                            +90 555 333 12 11</p>
                     </div>
-                    <div className="col">
-                        <h3>Category</h3>
-                        <ul>
-                            <li><a href="/">Home</a></li>
-                            <li><a href="/services">Services</a></li>
-                            <li><a href="/about">About Us</a></li>
-                            <li><a href="/features">Features</a></li>
-                            <li><a href="/contacts">Contacts</a></li>
-                        </ul>
+                </Col>
+                <Col md={4} lg={3} className='d-flex justify-content-center'>
+                    <div className='mt-1 me-2'>
+                        <FontAwesomeIcon icon={faMapLocationDot} style={{ color: "#FFD43B", }} />
                     </div>
-                    <div className="col">
-                        <h3 className='responsive-footer'>Newsletter</h3>
-                        <form className='responsive-footer'>
-                            <input type="email" placeholder="Enter your email id" />
-                            <button type="submit">→</button>
-                        </form>
-                        <ul className="social-icons">
-                            <li><a href="#"><i className="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#"><i className="fab fa-twitter"></i></a></li>
-                            <li><a href="#"><i className="fab fa-instagram"></i></a></li>
-                        </ul>
+                    <div>
+                        <h3>Adderess</h3>
+                        <address>
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aspernatur.
+                            İstanbul, Turkey
+                        </address>
                     </div>
-                </div>
-                <div className="copyright">
-                    <p>Easy Tutorials © 2021 - All Rights Reserved</p>
-                </div>
-            </div>
+                </Col>
+            </Row>
+
+            <Col lg={12} md={12} className="d-flex justify-content-center gap-3 ">
+                <p >©2024 Lorem. All Rights Reserved.</p>
+                <nav className='d-flex gap-2 '>
+                    <a href='/'><FontAwesomeIcon icon={faFacebook} size={'xl'} /></a>
+                    <a href="/"><FontAwesomeIcon icon={faTwitter} size='xl' /></a>
+                    <a href="/"><FontAwesomeIcon icon={faInstagram} size='xl' /></a>
+                </nav>
+            </Col>
         </footer>
     );
 }

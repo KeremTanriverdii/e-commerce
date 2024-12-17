@@ -16,7 +16,7 @@ function OrderSuccessfull() {
     }, [dispatch])
     return (
         <>
-            <div className='container'>
+            <div className='successful-container'>
                 <div className='vh-100 d-flex align-items-center'>
                     <Alert className='w-75 h-25  mx-auto align-items-center customGradiant'>
                         <div>

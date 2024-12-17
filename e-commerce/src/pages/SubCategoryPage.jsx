@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { db } from '../store/Firebase';
 import ProductCard from '../components/ProductCard'
-import { Container } from 'react-bootstrap';
 
 function SubCategoryPage() {
     const { categoryId, subCategory, productSlug } = useParams()
     const [products, setProducts] = useState([]);
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {

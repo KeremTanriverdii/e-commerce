@@ -1,55 +1,82 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Table, Button, Form, Col, Row, CardBody } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { Table, Button, Form, Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faTruck } from '@fortawesome/free-solid-svg-icons';
-import { clearCart, removeToCart,uptadeQuantity } from '../store/cartSlice';
+import { clearCart, removeToCart, uptadeQuantity } from '../store/cartSlice';
 
 const Basket = () => {
-    const cartItems = useSelector((state) => state.cart.items); // Sepetteki ürünler
+    // Get redux 'cart'
+    const cartItems = useSelector((state) => state.cart.items);
+    const isCartEmpty = cartItems.length === 0;
+    // get redux states
     const dispatch = useDispatch();
-
     const navigate = useNavigate();
+    // Create shipping, message and grand Total variable for show Total
+    const [shipping, setShipping] = useState(10);
+    const [message, setMessage] = useState(null)
+    const [grandTotal, setGrandTotal] = useState(0);
 
-    const [subTotal, setSubTotal] = useState(0);
-    const [discount,setDiscount] = useState(0);
-    const [shipping ,setShipping] = useState(10)
-    const [message,setMessage] = useState(null)
+    // Calculate discount percent price
+    const calculateDiscountPercentNinety = (price) => price - (price * 0.10);
+    const calculateDiscountPercentTen = (price) => price - (price * 0.90)
+    // Total amount discount and total amount
+    const calculateTotals = (cartItems) => {
+        const updatedProducts = cartItems.map(product => {
+            const discountPrice = calculateDiscountPercentNinety(product.price);
+            const discauntPersent = calculateDiscountPercentTen(product.price) * product.quantity
+            const totalPrice = discountPrice * product.quantity;
+            return {
+                ...product,
+                discountPrepare: discauntPersent.toFixed(2),
+                totalPrice: totalPrice.toFixed(2)
+            };
+        });
+        // Get a totalPrice with reduce methot and calculate sub Total
+        const subTotal = updatedProducts.reduce((acc, product) => acc + parseFloat(product.totalPrice), 0).toFixed(2);
+        // Get a discount price with reduce methot and calculate discount Total
+        const discountTotal = updatedProducts.reduce((acc, product) => acc + product.price * 0.10 * (product.quantity), 0).toFixed(2);
+        // return 0 if shipping amount is greater than 50 or return 10 if less
+        let shipping = subTotal > 50 ? 0 : 10;
+        // grandTotal subTotal+shipping
+        const grandTotalx = parseFloat(subTotal) + parseFloat(shipping);
+        return { updatedProducts, subTotal, discountTotal, shipping, grandTotalx };
+    };
+    // Destructuring to assignment use
+    const { updatedProducts, discountTotal, subTotal } = calculateTotals(cartItems)
+
+    // Side effect managament grandTotalx and shipping if amount changes to render set shipping and grandTotal
     useEffect(() => {
-        const originalSubTotal = cartItems.length > 0 ? 
-        cartItems.reduce((total,item) => total + item.price * item.quantity , 0) : 0;
-        const discountAmount = originalSubTotal * 0.10;
-        const discountSubTotal = originalSubTotal - discountAmount;
-
-        setSubTotal(discountSubTotal);
-        setDiscount(discountAmount)
-
-        if(discountSubTotal > 50){
-            setShipping(0);
+        const { shipping, grandTotalx } = calculateTotals(cartItems)
+        setShipping(shipping);
+        setGrandTotal(grandTotalx);
+        // İf shipping equal zero return message 
+        if (shipping === 0) {
             setMessage(
-            <div className='d-flex justify-content-end align-items-center'> 
-                <FontAwesomeIcon icon={faTruck} style={{color: "#74C0FC",}} className='me-2' />{' '}
-                 Free Shipping!</div>
-     )
-        }else{
-            setShipping(10)
-                     setMessage(
-                <div > 
-                <FontAwesomeIcon icon={faTruck} style={{color: "#74C0FC",}} />
-                 Free Shipping! When you spend over USD 50, shipping is free!
-                 </div>
-                     )
-        }
 
+                <div className='d-flex justify-content-end align-items-center'>
+                    <FontAwesomeIcon icon={faTruck} style={{ color: "#74C0FC", }} className='me-2' />
+                    Free Shipping!</div>
+
+            )
+        } else {
+            // Shipping is not free
+            setMessage(
+                <div >
+                    <FontAwesomeIcon icon={faTruck} style={{ color: "#74C0FC", }} />
+                    Free Shipping! When you spend over USD 50, shipping is free!
+                </div>
+            )
+        }
     }, [cartItems])
-    const grandTotal = subTotal + shipping;
-    
+    // Basket items remove
     const handleRemoveItem = (item) => {
-        if(item && item.id && item.selectedSize){
+        if (item && item.id && item.size) {
+            // using dispatch in the removeToCart 'redux cart slice'
             dispatch(removeToCart({
-                id:item.id,
-                selectedSize:item.selectedSize
+                id: item.id,
+                size: item.size
             }))
         }
     }
@@ -58,20 +85,12 @@ const Basket = () => {
         dispatch(clearCart())
     }
 
-    const handleProductClick = (item) => {
-        const slug = item.slug;
-        const size = item.selectedSize;
-        const color = item.selectedColor;
-
-        navigate(`/product/${slug}?size=${size}&color=${color}`);
-    };
-
-    const handleQuantityChange = (e,item) => {
+    const handleQuantityChange = (e, item) => {
         const newQuantity = parseInt(e.target.value)
-        if(item && item.id && item.selectedSize){
+        if (item && item.id && item.size) {
             dispatch(uptadeQuantity({
-                id:item.id,
-                selectedSize:item.selectedSize,
+                id: item.id,
+                size: item.size,
                 quantity: newQuantity
             }))
         }
@@ -92,40 +111,42 @@ const Basket = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {cartItems.map((item, idx) => (
-                                <tr key={idx}>
+                            {updatedProducts.map((item, idx) => {
+                                return (<tr key={idx}>
                                     <td>
                                         <div className="d-flex align-items-center">
                                             <img
-                                                src={item.variantImageUrl}
+                                                src={item.thumbnail}
                                                 alt={item.name}
-                                                style={{ width: '120px', height: '120px', objectFit: 'cover ' , cursor: 'pointer'}}
+                                                style={{ width: '120px', height: '120px', objectFit: 'cover ', cursor: 'pointer' }}
                                                 className="img-fluid"
-                                                onClick={() => handleProductClick(item)}
+                                                onClick={() =>
+                                                    navigate(`/product/${item.slug}?size=${item.size}&color=${item.color}`)
+                                                }
                                             />
-                                            <div >
+                                            <div className='ms-1 p-2' >
                                                 <h6>{item.name}</h6>
-                                                <p>Color: {item.selectedColor}</p>
-                                                <p>Size: {item.selectedSize}</p>
+                                                <p>Color: {item.color}</p>
+                                                <p>Size: {item.size}</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        {discount < item.price && (
+                                        {!item.discountPrepare < item.price && (
                                             <div>
                                                 <span style={{ textDecoration: 'line-through', color: 'gray' }}>
-                                                    ${item.price.toFixed(2)}
+                                                    ${(item.price * item.quantity).toFixed(2)}
                                                 </span>{''}
-                                                <span className="d-flex text-danger">${subTotal.toFixed(0)- discount}</span>
+                                                <span className="d-flex text-danger">${item.discountPrepare}</span>
                                             </div>
                                         )}
-                                        {!discount && <span>${item.price}</span>}
+                                        {!item.discountPrepare && <span>${item.price}</span>}
                                     </td>
                                     <td>
                                         <Form.Control
                                             as="select"
                                             value={item.quantity}
-                                            onChange={(e) => handleQuantityChange(e, item)} 
+                                            onChange={(e) => handleQuantityChange(e, item)}
                                             style={{ width: '60px' }}
                                         >
                                             {[...Array(10).keys()].map((x) => (
@@ -135,54 +156,59 @@ const Basket = () => {
                                             ))}
                                         </Form.Control>
                                     </td>
-                                    <td>${((item.price * 0.90) * item.quantity).toFixed(2)}</td>
+                                    <td>${item.totalPrice}</td>
                                     <td>
                                         <Button variant="outline-danger" onClick={() => handleRemoveItem(item)}>
                                             <FontAwesomeIcon icon={faTrash} style={{ color: "#000", }} />
                                         </Button>
                                     </td>
                                 </tr>
-                            ))}
+                                )
+                            })}
                         </tbody>
                     </Table>
                     <div className='d-flex justify-content-end align-items-center '>
-                    <Button  
-                    className='d-flex align-items-center'
-                    variant='danger'
-                    onClick={() => handleAllClear()}>Clear All
-                    <FontAwesomeIcon icon={faTrash} style={{ color: "#000", marginLeft: '15px' }} />
-                    </Button>
+                        <Button
+                            className='d-flex align-items-center'
+                            variant='danger'
+                            onClick={() => handleAllClear()}>Clear All
+                            <FontAwesomeIcon icon={faTrash} style={{ color: "#000", marginLeft: '15px' }} />
+                        </Button>
                     </div>
 
                 </Col>
 
-                {/* Sipariş Özeti */}
+                {/* Order Summary */}
                 <Col md={4}>
                     <div className="border p-4 rounded">
                         <h4>Order Summary</h4>
                         <div className="d-flex justify-content-between">
-                            <p>Subtotal</p>
-                            <p>${subTotal.toFixed(2)}</p>
+                            <p>Sub Total</p>
+                            <p>${subTotal}</p>
                         </div>
                         <div className="d-flex justify-content-between">
-                            <p>Discount</p>
-                            <p className="text-danger">-${discount.toFixed(2)}</p>
+                            <p>Total Discount</p>
+                            <p className="text-danger">${discountTotal}</p>
                         </div>
-                        <div className="d-flex justify-content-between  ">
+                        <div className="d-flex justify-content-between">
                             <p >Shipping</p>
-                            <p >${shipping.toFixed(2)}</p>
-
-
+                            <p >${shipping}</p>
                         </div>
-                            {message}
+                        {message}
                         <hr />
                         <div className="d-flex justify-content-between">
                             <h5>Grand Total</h5>
-                            <h5>${grandTotal.toFixed(2)}</h5>
+                            <h5>${grandTotal}</h5>
                         </div>
-                        <Button className="mt-3 w-100" variant="primary" as={Link} to="/basket/payment">
+
+                        <Button
+                            disabled={isCartEmpty}
+                            className="mt-3 w-100" variant="primary" as={Link} to="/basket/payment">
                             Proceed to Checkout
                         </Button>
+                        <div className='d-flex mt-2 justify-content-center text-danger'>
+                            {isCartEmpty ? 'Bag is cannot be empty    ' : ''}
+                        </div>
                     </div>
                 </Col>
             </Row>

@@ -5,9 +5,13 @@ import { db } from '../store/Firebase';
 import ProductCard from '../components/ProductCard';
 
 function CategoryPage() {
+    // Get categoryId paramater url (/category/:categoryId)
     const { categoryId } = useParams();
+    // 'Products' react state was created to retrieve and assign the queried products.
     const [products, setProducts] = useState([]);
 
+
+    // Firestore products get fetch with query
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -26,15 +30,13 @@ function CategoryPage() {
     }, [categoryId, db])
 
     return (
-        <>
-            <div className='product-list'>
-                {products.map((product, index) => (
-                    <Link key={index} to={`/product/${product.slug}`}>
-                        <ProductCard productDetails={product} key={index} />
-                    </Link>
-                ))}
-            </div>
-        </>
+        <div className='product-list'>
+            {products.map((product, productIdx) => (
+                <Link key={productIdx} to={`/product/${product.slug}`}>
+                    <ProductCard productDetails={product} />
+                </Link>
+            ))}
+        </div>
     )
 }
 

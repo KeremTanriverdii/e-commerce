@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// User orders  page
 const orderSlice = createSlice({
     name: "order-history",
     initialState: {
